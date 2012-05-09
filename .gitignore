@@ -1,0 +1,6 @@
+/nativeif.sdf
+/nativeif.opensdf
+/*.suo
+Debug
+Release
+*.user
