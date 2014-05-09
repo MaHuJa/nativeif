@@ -1,8 +1,22 @@
-#pragma once
+#ifndef STDAFX_H
+#define STDAFX_H
+
+
+#ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
-// Windows Header Files:
 #include <windows.h>
+#define SO_CONSTRUCTOR
+#define EXPORTED __declspec(dllexport) 
+
+#else
+#define SO_CONSTRUCTOR __attribute__ ((constructor)) __attribute__((visibility("default")))
+#pragma GCC visibility push(hidden)
+#define EXPORTED __attribute__((visibility("default")))
+
+
+#endif
+
 
 #include <string>
 using std::string;
@@ -43,3 +57,7 @@ using std::future;
 
 #include <stdexcept>
 #include <cassert>
+
+
+
+#endif	//STDAFX_H

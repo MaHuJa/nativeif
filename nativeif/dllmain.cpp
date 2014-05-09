@@ -26,29 +26,27 @@ string BigTestCase (string) {
 
 extern "C" 
 {
-  __declspec(dllexport) void __stdcall RVExtension(char *output, int outputSize, const char *function); 
+	// __stdcall may have to be removed for linux? Testing it will tell.
+	EXPORTED void __stdcall RVExtension(char *output, int outputSize, const char *function); 
 };
 
+void SO_CONSTRUCTOR init() {
+	nif::callables["BigTestCase"] = BigTestCase;
+}
+#ifdef _WIN32
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved ) {
-	using namespace nif;
 	switch (ul_reason_for_call)
 	{
 	case DLL_PROCESS_ATTACH:
-		{
-			DEBUGLOG("Attaching DLL");
-			callables["BigTestCase"]=BigTestCase;
-		}
+		init();
 		break;
-	case DLL_PROCESS_DETACH:
-			DEBUGLOG("Detaching DLL\n");
-		break;
-	case DLL_THREAD_ATTACH:
-		break;
-	case DLL_THREAD_DETACH:
-		break;
+	case DLL_PROCESS_DETACH:break;
+	case DLL_THREAD_ATTACH:break;
+	case DLL_THREAD_DETACH:break;
 	}
 	return TRUE;
 }
+#endif
 
 #define STRTOCS(s) strncpy(output,s.c_str(),outputSize)
 void __stdcall RVExtension(char *output, int outputSize, const char *function) {
