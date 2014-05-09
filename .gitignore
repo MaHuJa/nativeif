@@ -1,6 +1,7 @@
 /nativeif.sdf
 /nativeif.opensdf
 /*.suo
+/ipch/*
 Debug
 Release
 *.user
