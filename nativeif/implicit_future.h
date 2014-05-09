@@ -37,7 +37,12 @@ class transparent_future {
 	std::future<T> fut;
 	T value;
 	bool acquired;
-	inline void get() { if (!acquired) value = fut.get(); }
+	inline void get() { 
+		if (!acquired) {
+			value = fut.get();
+			acquired = true;
+		}
+	}
 public:
 	transparent_future(std::future<T>&& futr) : fut(move(futr)), acquired(false) {}
 	transparent_future(T present) : fut(), value(present), acquired(true) {};
@@ -46,10 +51,10 @@ public:
 		return value;
 	}
 	template <class Y>	T& operator= (Y rhs) { get(); value = rhs; return value; }
-	template <class Y>	T& operator+= (Y rhs) { get(); value = rhs; return value; }
-	template <class Y>	T& operator-= (Y rhs) { get(); value = rhs; return value; }
-	template <class Y>	T& operator*= (Y rhs) { get(); value = rhs; return value; }
-	template <class Y>	T& operator/= (Y rhs) { get(); value = rhs; return value; }
+	template <class Y>	T& operator+= (Y rhs) { get(); value += rhs; return value; }
+	template <class Y>	T& operator-= (Y rhs) { get(); value -= rhs; return value; }
+	template <class Y>	T& operator*= (Y rhs) { get(); value *= rhs; return value; }
+	template <class Y>	T& operator/= (Y rhs) { get(); value /= rhs; return value; }
 	template <class Y>	T& operator++ () { get(); return ++value; }
 	template <class Y>	T operator++ (int) { get(); return value++; }
 };
